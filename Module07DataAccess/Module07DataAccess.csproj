@@ -57,6 +57,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\Fonts\Nunito-Italic-VariableFont_wght.ttf" />
+	  <None Remove="Resources\Fonts\Nunito-VariableFont_wght.ttf" />
+	  <None Remove="Resources\Fonts\Quicksand-VariableFont_wght.ttf" />
+	  <None Remove="Resources\Fonts\Raleway-Italic-VariableFont_wght.ttf" />
+	  <None Remove="Resources\Fonts\Raleway-VariableFont_wght.ttf" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />

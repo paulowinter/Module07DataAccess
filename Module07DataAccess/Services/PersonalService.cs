@@ -19,17 +19,19 @@ namespace Module07DataAccess.Services
             _connectionString = dbService.GetConnectionString();
         }
 
-        public async Task<List<Personal>>GetAllPersonalsAsync()
+        public async Task<List<Personal>> GetAllPersonalsAsync()
         {
             var personalService = new List<Personal>();
-            using (var conn = new MySqlConnection( _connectionString )) 
+            using (var conn = new MySqlConnection(_connectionString))
             {
                 await conn.OpenAsync();
+
+                //retrieve data
                 var cmd = new MySqlCommand("SELECT * FROM tblPersonal", conn);
 
                 using (var reader = await cmd.ExecuteReaderAsync())
                 {
-                    while (await reader.ReadAsync()) 
+                    while (await reader.ReadAsync())
                     {
                         personalService.Add(new Personal
                         {
@@ -41,8 +43,52 @@ namespace Module07DataAccess.Services
                     }
                 }
             }
-
             return personalService;
+        }
+
+        public async Task<bool> AddPersonalAsync(Personal newPerson)
+        {
+            try
+            {
+                using (var conn = new MySqlConnection(_connectionString))
+                {
+                    await conn.OpenAsync();
+                    var cmd = new MySqlCommand("INSERT INTO tblPersonal (Name, Gender, ContactNo) VALUES (@Name, @Gender, @contactNo)", conn);
+                    cmd.Parameters.AddWithValue("@Name", newPerson.Name);
+                    cmd.Parameters.AddWithValue("@Gender", newPerson.Gender);
+                    cmd.Parameters.AddWithValue("@ContactNo", newPerson.ContactNo);
+
+                    var result = await cmd.ExecuteNonQueryAsync();
+                    return result > 0;
+                }
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error adding personal record: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<bool> DeletePersonalAsync(int id)
+        {
+            try
+            {
+                using (var conn = new MySqlConnection(_connectionString))
+                {
+                    await conn.OpenAsync();
+                    var cmd = new MySqlCommand("DELETE FROM tblPersonal WHERE ID=@ID", conn);
+                    cmd.Parameters.AddWithValue("@ID", id);
+
+                    var result = await cmd.ExecuteNonQueryAsync();
+                    return result > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error deleting personal record: {ex.Message}");
+                return false;
+            }
         }
     }
 }
